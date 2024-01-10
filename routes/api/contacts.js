@@ -1,25 +1,40 @@
-const express = require('express')
+const express = require("express");
+const router = express.Router();
+const {
+  listContacts,
+  getById,
+  addContact,
+  removeContact,
+  updateContact,
+} = require("../../models/contacts");
 
-const router = express.Router()
+router.get("/", async (req, res, next) => {
+  res.json({ message: "Homework done!" });
+});
 
-router.get('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.get("/:contactId", async (req, res, next) => {
+  res.json({ message: "template message" });
+});
 
-router.get('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.post("/", validateMiddleware, (req, res) => {
+  const newContact = req.body;
+  const result = addContact(newContact);
+  res.status(201).json(result);
+});
+router.delete("/:contactId", async (req, res, next) => {
+  res.json({ message: "template message" });
+});
 
-router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.put("/:id", validateMiddleware, (req, res) => {
+  const contactId = req.params.id;
+  const updatedContact = req.body;
+  const result = updateContact(contactId, updatedContact);
 
-router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+  if (result) {
+    res.status(200).json(result);
+  } else {
+    res.status(404).json({ message: "Not found" });
+  }
+});
 
-router.put('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
-
-module.exports = router
+module.exports = router;

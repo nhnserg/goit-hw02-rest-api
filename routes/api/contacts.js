@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const contactsController = require("../../controllers/contactsController");
+const contactsController = require("../../services/contactsController");
+const {
+  updateContactSchema,
+  addContactSchema,
+} = require("../../services/contactsSchemas");
 
 router.get("/", async (req, res, next) => {
   try {
@@ -28,13 +32,26 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   const newContact = req.body;
 
-  const validationResult = contactsController.validateContact(newContact);
-  if (validationResult.error) {
-    return res.status(400).json({ message: "missing required name field" });
-  }
-
   try {
-    const addedContact = await contactsController.addContact(newContact);
+    const validationResult = addContactSchema.validate(newContact, {
+      abortEarly: false,
+    });
+
+    if (validationResult.error) {
+      const errorDetails = validationResult.error.details.map((detail) => ({
+        field: detail.path[0],
+        message: detail.message,
+      }));
+
+      return res.status(400).json({
+        message: "Validation error",
+        details: errorDetails,
+      });
+    }
+
+    const addedContact = await contactsController.addContact(
+      validationResult.value
+    );
 
     res.status(201).json(addedContact);
   } catch (error) {
@@ -61,14 +78,21 @@ router.put("/:id", async (req, res, next) => {
   const contactId = req.params.id;
   const updatedFields = req.body;
 
-  if (!updatedFields) {
-    return res.status(400).json({ message: "missing fields" });
-  }
-
   try {
+    const validationResult = updateContactSchema.validate(updatedFields, {
+      abortEarly: false,
+    });
+
+    if (validationResult.error) {
+      return res.status(400).json({
+        message: "Validation error",
+        details: validationResult.error.details,
+      });
+    }
+
     const updatedContact = await contactsController.updateContact(
       contactId,
-      updatedFields
+      validationResult.value
     );
 
     if (updatedContact) {

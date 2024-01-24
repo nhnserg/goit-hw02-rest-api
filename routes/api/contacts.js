@@ -6,6 +6,32 @@ const {
   addContactSchema,
 } = require("../../services/contactsSchemas");
 
+router.patch("/api/contacts/:contactId/favorite", async (req, res) => {
+  const contactId = req.params.contactId;
+  const { favorite } = req.body;
+
+  if (typeof favorite === "undefined") {
+    return res.status(400).json({ message: "missing field favorite" });
+  }
+
+  try {
+    const updatedContact = await contactsController.findByIdAndUpdate(
+      contactId,
+      { $set: { favorite } },
+      { new: true }
+    );
+
+    if (!updatedContact) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
+    res.status(200).json(updatedContact);
+  } catch (error) {
+    console.error("Error updating contact status:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 router.get("/", async (req, res, next) => {
   try {
     const contacts = await contactsController.listContacts();

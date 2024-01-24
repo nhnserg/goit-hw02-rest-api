@@ -16,7 +16,6 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
-// Подключение к MongoDB с помощью Mongoose
 mongoose.connect(
   "mongodb+srv://nhnsergfr:HGHfrag176@nhnserg.jnnivf6.mongodb.net/db-contacts/",
   {

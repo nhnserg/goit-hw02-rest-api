@@ -5,8 +5,9 @@ const {
   updateContactSchema,
   addContactSchema,
 } = require("../../services/contactsSchemas");
+const isValidId = require("../../middlewares/isValidId");
 
-router.patch("/api/contacts/:contactId/favorite", async (req, res) => {
+router.patch("/:contactId/favorite", isValidId, async (req, res) => {
   const contactId = req.params.contactId;
   const { favorite } = req.body;
 
@@ -55,36 +56,6 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
-  const newContact = req.body;
-
-  try {
-    const validationResult = addContactSchema.validate(newContact, {
-      abortEarly: false,
-    });
-
-    if (validationResult.error) {
-      const errorDetails = validationResult.error.details.map((detail) => ({
-        field: detail.path[0],
-        message: detail.message,
-      }));
-
-      return res.status(400).json({
-        message: "Validation error",
-        details: errorDetails,
-      });
-    }
-
-    const addedContact = await contactsController.addContact(
-      validationResult.value
-    );
-
-    res.status(201).json(addedContact);
-  } catch (error) {
-    next(error);
-  }
-});
-
 router.delete("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -99,20 +70,44 @@ router.delete("/:id", async (req, res, next) => {
     next(error);
   }
 });
+router.post("/", async (req, res, next) => {
+  const newContact = req.body;
+
+  try {
+    const validationResult = addContactSchema.validate(newContact);
+
+    if (validationResult.error) {
+      return res.status(400).json({
+        message: validationResult.error.message,
+      });
+    }
+
+    const addedContact = await contactsController.addContact(
+      validationResult.value
+    );
+
+    res.status(201).json(addedContact);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.put("/:id", async (req, res, next) => {
   const contactId = req.params.id;
   const updatedFields = req.body;
 
-  try {
-    const validationResult = updateContactSchema.validate(updatedFields, {
-      abortEarly: false,
+  if (Object.keys(updatedFields).length === 0) {
+    return res.status(400).json({
+      message: "Request body is empty",
     });
+  }
+
+  try {
+    const validationResult = updateContactSchema.validate(updatedFields);
 
     if (validationResult.error) {
       return res.status(400).json({
-        message: "Validation error",
-        details: validationResult.error.details,
+        message: validationResult.error.message,
       });
     }
 

@@ -7,6 +7,7 @@ const {
   notFoundHandler,
   errorHandler,
 } = require("./middlewares/errorHandlers");
+const { serverConfig } = require("./config/serverconfig");
 
 const app = express();
 
@@ -17,11 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 mongoose.connect(
-  "mongodb+srv://nhnsergfr:HGHfrag176@nhnserg.jnnivf6.mongodb.net/db-contacts/",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
+  "mongodb+srv://nhnsergfr:HGHfrag176@nhnserg.jnnivf6.mongodb.net/db-contacts"
 );
 
 const db = mongoose.connection;
@@ -40,7 +37,7 @@ app.use("/api/contacts", contactsRouter);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3000;
+const PORT = serverConfig.port;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

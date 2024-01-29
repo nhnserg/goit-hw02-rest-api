@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { notFoundHandler } = require("../middlewares/errorHandlers");
 
 const contactSchema = new mongoose.Schema(
   {
@@ -24,6 +25,7 @@ const contactSchema = new mongoose.Schema(
     versionKey: false,
   }
 );
+contactSchema.post("save", notFoundHandler);
 
 const Contact = mongoose.model("Contact", contactSchema);
 

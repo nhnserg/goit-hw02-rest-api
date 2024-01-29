@@ -14,14 +14,14 @@ router.get("/", connect.listContacts);
 
 router.get("/:id", isValidId, connect.getById);
 
-router.post("/", validateBody(addContactSchema), connect.addNewContact);
+router.post("/", validateBody(updateContactSchema), connect.addNewContact);
 
 router.delete("/:id", isValidId, connect.deleteContact);
 
 router.put(
   "/:id",
   isValidId,
-  validateBody(updateContactSchema),
+  validateBody(addContactSchema),
   connect.updateContact
 );
 

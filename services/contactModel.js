@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 const { notFoundHandler } = require("../middlewares/errorHandlers");
 
-const contactSchema = new mongoose.Schema(
+const contactSchema = new Schema(
   {
     name: {
       type: String,
@@ -27,6 +27,6 @@ const contactSchema = new mongoose.Schema(
 );
 contactSchema.post("save", notFoundHandler);
 
-const Contact = mongoose.model("Contact", contactSchema);
+const Contact = model("Contact", contactSchema);
 
 module.exports = Contact;

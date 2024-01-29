@@ -14,7 +14,7 @@ router.get("/", connect.listContacts);
 
 router.get("/:id", isValidId, connect.getById);
 
-router.post("/", validateBody(updateContactSchema), connect.addNewContact);
+router.post("/", validateBody(updateContactSchema), connect.addContact);
 
 router.delete("/:id", isValidId, connect.deleteContact);
 

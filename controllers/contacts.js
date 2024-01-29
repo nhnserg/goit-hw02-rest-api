@@ -16,13 +16,13 @@ const getById = async (req, res, next) => {
   res.json(contactById);
 };
 
-const addNewContact = async (req, res) => {
-  const newContact = await Contact.create(req.body);
-  res.status(201).json(newContact);
-  if (!newContact) {
-    throw HttpError(404, "Not Found");
+const addContact = async (req, res) => {
+  const result = await Contact.create(req.body);
+  res.status(201).json(result);
+  if (!result) {
+    throw HttpError(404, "Not found");
   }
-  res.json(newContact);
+  res.json(result);
 };
 
 const updateContact = async (req, res) => {
@@ -68,7 +68,7 @@ const updateFavorite = async (req, res) => {
 module.exports = {
   listContacts: connectWrapper(listContacts),
   getById: connectWrapper(getById),
-  addNewContact: connectWrapper(addNewContact),
+  addContact: connectWrapper(addContact),
   updateContact: connectWrapper(updateContact),
   deleteContact: connectWrapper(deleteContact),
   updateFavorite: connectWrapper(updateFavorite),

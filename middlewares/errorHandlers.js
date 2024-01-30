@@ -6,7 +6,7 @@ const notFoundHandler = (req, res, next) => {
 // errorHandler
 const errorHandler = (err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ message: "Internal Server Error" });
+  res.status(500).json({ message: "Server Error" });
 };
 
 module.exports = {

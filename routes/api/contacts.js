@@ -4,7 +4,7 @@ const {
   addContactSchema,
   patchSchema,
 } = require("../../services/contactsSchemas");
-const isValidId = require("../../middlewares/isValidId");
+const { isValidId } = require("../../middlewares/isValidId");
 
 const validateBody = require("../../middlewares/validateBody");
 const connect = require("../../controllers/contacts");
@@ -14,14 +14,14 @@ router.get("/", connect.listContacts);
 
 router.get("/:id", isValidId, connect.getById);
 
-router.post("/", validateBody(updateContactSchema), connect.addContact);
+router.post("/", validateBody(addContactSchema), connect.addContact);
 
 router.delete("/:id", isValidId, connect.deleteContact);
 
 router.put(
   "/:id",
   isValidId,
-  validateBody(addContactSchema),
+  validateBody(updateContactSchema),
   connect.updateContact
 );
 

@@ -8,12 +8,16 @@ const listContacts = async (req, res) => {
 };
 
 const getById = async (req, res, next) => {
-  const { id } = req.params;
-  const contactById = await Contact.findById(id);
-  if (!contactById) {
-    throw HttpError(404, "Not found");
+  try {
+    const { id } = req.params;
+    const result = await Contact.findById(id);
+    if (!result) {
+      throw HttpError(404);
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
   }
-  res.json(contactById);
 };
 
 const addContact = async (req, res) => {
@@ -29,7 +33,7 @@ const updateContact = async (req, res) => {
   const { id } = req.params;
 
   if (!req.body || Object.keys(req.body).length === 0) {
-    throw HttpError(400, "missing fields");
+    throw new HttpError(400, "missing fields");
   }
 
   const result = await Contact.findByIdAndUpdate(id, req.body, {

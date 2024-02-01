@@ -6,6 +6,7 @@ const {
   notFoundHandler,
   errorHandler,
 } = require("./middlewares/errorHandlers");
+const { connectDB } = require("./db/serverConfig");
 
 const app = express();
 
@@ -20,10 +21,17 @@ app.use("/api/contacts", contactsRouter);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 3000;
+const { PORT } = process.env;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(`Server is running. Use our API on port: ${PORT}`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-module.exports = app;
+startServer();

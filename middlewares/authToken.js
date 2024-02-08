@@ -5,7 +5,7 @@ const User = require("../services/userModel");
 const { SECRET_KEY } = process.env;
 
 const authToken = async (req, res, next) => {
-  const { authorization = "" } = req.header;
+  const { authorization = "" } = req.headers;
   const [bearer, token] = authorization.split(" ");
   if (bearer !== "Bearer") {
     return res.status(401).json({ message: "Not authorized" });
@@ -15,7 +15,7 @@ const authToken = async (req, res, next) => {
     const user = await User.findById(id);
 
     if (!user || !user.token || user.token !== token) {
-      throw HttpError(401, "Not authorized");
+      throw new HttpError(401, "Not authorized");
     }
     req.user = user;
     next();

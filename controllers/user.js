@@ -1,11 +1,9 @@
-const dotenv = require("dotenv");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
 const fs = require("fs/promises");
 const path = require("path");
 const Jimp = require("jimp");
-dotenv.config();
 const { User } = require("../services/userModel");
 const { HttpError, connectWrapper } = require("../helpers");
 

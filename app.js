@@ -1,5 +1,4 @@
 const express = require("express");
-const path = require("path");
 const logger = require("morgan");
 const cors = require("cors");
 const contactsRouter = require("./routes/api/contacts");
@@ -20,7 +19,6 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
-app.use("/avatars", express.static(path.join(__dirname, "public", "avatars")));
 app.use("/api/users", userRoute);
 app.use("/api/contacts", contactsRouter);
 

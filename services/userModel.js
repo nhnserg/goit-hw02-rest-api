@@ -1,7 +1,7 @@
+const mongoose = require("mongoose");
 const Joi = require("joi");
-const { Schema, model } = require("mongoose");
 
-const userSchema = new Schema(
+const userSchema = new mongoose.Schema(
   {
     password: {
       type: String,
@@ -45,6 +45,6 @@ const schemasUser = {
   subscriptionSchema,
 };
 
-const User = model("user", userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = { User, schemasUser };

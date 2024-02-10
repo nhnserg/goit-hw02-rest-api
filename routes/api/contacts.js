@@ -8,18 +8,20 @@ const { isValidId } = require("../../middlewares/isValidId");
 
 const validateBody = require("../../middlewares/validateBody");
 const connect = require("../../controllers/contacts");
+const authToken = require("../../middlewares/authToken");
 const router = express.Router();
 
-router.get("/", connect.listContacts);
+router.get("/", authToken, connect.listContacts);
 
-router.get("/:id", isValidId, connect.getById);
+router.get("/:id", authToken, isValidId, connect.getById);
 
-router.post("/", validateBody(addContactSchema), connect.addContact);
+router.post("/", authToken, validateBody(addContactSchema), connect.addContact);
 
-router.delete("/:id", isValidId, connect.deleteContact);
+router.delete("/:id", authToken, isValidId, connect.deleteContact);
 
 router.put(
   "/:id",
+  authToken,
   isValidId,
   validateBody(updateContactSchema),
   connect.updateContact
@@ -27,6 +29,7 @@ router.put(
 
 router.patch(
   "/:id/favorite",
+  authToken,
   isValidId,
   validateBody(patchSchema),
   connect.updateFavorite

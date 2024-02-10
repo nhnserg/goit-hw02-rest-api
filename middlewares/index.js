@@ -1,5 +1,12 @@
 const isValidId = require("./isValidId");
+const authToken = require("./authToken");
 const validateBody = require("./validateBody");
 const { notFoundHandler, errorHandler } = require("./errorHandlers");
 
-module.exports = { isValidId, validateBody, notFoundHandler, errorHandler };
+module.exports = {
+  authToken,
+  isValidId,
+  validateBody,
+  notFoundHandler,
+  errorHandler,
+};

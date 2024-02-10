@@ -26,7 +26,7 @@ const getById = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { _id: owner } = req.user;
-    const result = await Contact.findById({ id, owner });
+    const result = await Contact.findOne({ id, owner });
     if (!result) {
       throw HttpError(404);
     }

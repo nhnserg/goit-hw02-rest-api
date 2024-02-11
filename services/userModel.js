@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema(
 const registerSchema = Joi.object({
   password: Joi.string().required(),
   email: Joi.string().required(),
+  avatarURL: Joi.string(),
 });
 
 const loginSchema = Joi.object({

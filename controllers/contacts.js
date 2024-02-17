@@ -40,10 +40,12 @@ const addContact = async (req, res) => {
   const { _id: owner } = req.user;
   const result = await Contact.create({ ...req.body, owner });
 
+  res.status(201).json(result);
+
   if (!result) {
     throw HttpError(404, "Not found");
   }
-  res.status(201).json(result);
+  res.json(result);
 };
 
 const updateContact = async (req, res) => {

@@ -49,16 +49,18 @@ const register = connectWrapper(async (req, res) => {
 
 const verifyEmail = connectWrapper(async (req, res) => {
   const { verificationToken } = req.params;
-  const user = await User.findOneAndUpdate({ verificationToken });
+  const user = await User.findOne({ verificationToken });
 
   if (!user) {
-    throw HttpError(404, " User not found");
+    throw new HttpError(404, "User not found");
   }
+
   await User.findByIdAndUpdate(user.id, {
     verify: true,
     verificationToken: null,
   });
-  res.json({
+
+  res.status(200).json({
     message: "Verification successful",
   });
 });
@@ -66,18 +68,21 @@ const verifyEmail = connectWrapper(async (req, res) => {
 const resendVerifyEmail = connectWrapper(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
-  console.log(user);
+
   if (!user) {
-    throw HttpError(404, "User not found");
+    throw new HttpError(404, "User not found");
   }
+
   if (user.verify) {
-    throw HttpError(400, "This account has already been verified.");
+    throw new HttpError(400, "This account has already been verified.");
   }
+
   const verifyEmail = {
     to: email,
-    subject: "Verify yout email",
+    subject: "Verify your email",
     html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${user.verificationToken}">Click here to verify email</a>`,
   };
+
   await sendEmail(verifyEmail);
 
   res.json({

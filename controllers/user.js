@@ -49,7 +49,7 @@ const register = connectWrapper(async (req, res) => {
 
 const verifyEmail = connectWrapper(async (req, res) => {
   const { verificationToken } = req.params;
-  const user = await User.findOneAndUpdate({ verificationToken });
+  const user = await User.findOne({ verificationToken });
 
   if (!user) {
     throw HttpError(404, "User not found");
@@ -68,7 +68,7 @@ const verifyEmail = connectWrapper(async (req, res) => {
 const resendVerifyEmail = connectWrapper(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
-
+  console.log(user);
   if (!user) {
     throw HttpError(404, "User not found");
   }

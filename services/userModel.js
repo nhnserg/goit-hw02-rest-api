@@ -20,6 +20,14 @@ const userSchema = new mongoose.Schema(
 
     token: String,
     avatarURL: String,
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verification Token is required"],
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -39,10 +47,17 @@ const subscriptionSchema = Joi.object({
   subscription: Joi.string().required(),
 });
 
+const verifiEmailSchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    "string.email": "Email must be a valid address",
+    "any.required": "Missing required email field",
+  }),
+});
 const schemasUser = {
   loginSchema,
   registerSchema,
   subscriptionSchema,
+  verifiEmailSchema,
 };
 
 const User = mongoose.model("User", userSchema);
